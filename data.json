@@ -1,0 +1,306 @@
+{
+  "siteTitle": "公告平台",
+  "activeTime": "14:00",
+  "pages": [
+    {
+      "time": "00:00",
+      "updatedAt": "2026-06-29 00:00",
+      "notice": "00:00 价格已更新，用户点击 00:00 即可查看这一版价格。",
+      "sections": [
+        {
+          "title": "小刀",
+          "subtitle": "网页入口",
+          "linkText": "https://example.com/xiaodao",
+          "accent": "blue",
+          "groups": [
+            {
+              "name": "钱包整百",
+              "items": [
+                { "label": "渠道A", "value": "0.90" },
+                { "label": "渠道B", "value": "0.905" },
+                { "label": "渠道C", "value": "0.91" },
+                { "label": "渠道D", "value": "0.925" },
+                { "label": "渠道E", "value": "0.935" },
+                { "label": "渠道F", "value": "0.95", "highlight": true }
+              ]
+            },
+            {
+              "name": "钱包特殊",
+              "items": [
+                { "label": "渠道TA", "value": "0.955" },
+                { "label": "渠道TB", "value": "0.965" },
+                { "label": "Z1000", "value": "0.95" }
+              ]
+            }
+          ],
+          "copyText": "小刀 00:00 价格模板"
+        },
+        {
+          "title": "新星悦",
+          "subtitle": "网页 备用 Win版",
+          "linkText": "https://example.com/xxy",
+          "accent": "blue",
+          "groups": [
+            {
+              "name": "自动点券",
+              "items": [
+                { "label": "微信点额", "value": "0.825" },
+                { "label": "微信小额", "value": "0.855" },
+                { "label": "微信固额", "value": "0.865" },
+                { "label": "微信通额", "value": "0.895" },
+                { "label": "微信速额", "value": "0.915" },
+                { "label": "钱包直拉", "value": "0.945", "highlight": true }
+              ]
+            }
+          ],
+          "copyText": "新星悦 00:00 价格代码"
+        }
+      ]
+    },
+    {
+      "time": "10:00",
+      "updatedAt": "2026-06-29 10:00",
+      "notice": "10:00 价格已更新，用户点击 10:00 即可查看这一版价格。",
+      "sections": [
+        {
+          "title": "小刀",
+          "subtitle": "网页入口",
+          "linkText": "https://example.com/xiaodao",
+          "accent": "blue",
+          "groups": [
+            {
+              "name": "钱包整百",
+              "items": [
+                { "label": "渠道A", "value": "0.905" },
+                { "label": "渠道B", "value": "0.91" },
+                { "label": "渠道C", "value": "0.915" },
+                { "label": "渠道D", "value": "0.93" },
+                { "label": "渠道E", "value": "0.94" },
+                { "label": "渠道F", "value": "0.955", "highlight": true }
+              ]
+            },
+            {
+              "name": "微信点券",
+              "items": [
+                { "label": "渠道VA", "value": "0.895" },
+                { "label": "VB微信10起", "value": "0.84" },
+                { "label": "VC微信50", "value": "0.88" },
+                { "label": "VD100", "value": "0.885" },
+                { "label": "VE200", "value": "0.91" }
+              ]
+            }
+          ],
+          "copyText": "小刀 10:00 价格模板"
+        },
+        {
+          "title": "GBO",
+          "subtitle": "网页入口",
+          "linkText": "https://example.com/gbo.zip",
+          "accent": "yellow",
+          "groups": [
+            {
+              "name": "公告",
+              "items": [
+                { "label": "1起", "value": "0.785" },
+                { "label": "10起", "value": "0.81" },
+                { "label": "10可限", "value": "0.82" },
+                { "label": "qb10起", "value": "0.845" },
+                { "label": "50起", "value": "0.865" },
+                { "label": "100起", "value": "0.88" }
+              ]
+            }
+          ],
+          "copyText": "GBO 10:00 价格模板"
+        }
+      ]
+    },
+    {
+      "time": "14:00",
+      "updatedAt": "2026-06-29 14:00",
+      "notice": "14:00 价格已更新，当前默认展示这一版价格。",
+      "sections": [
+        {
+          "title": "小刀",
+          "subtitle": "网页入口",
+          "linkText": "https://example.com/xiaodao",
+          "accent": "blue",
+          "groups": [
+            {
+              "name": "钱包整百",
+              "items": [
+                { "label": "渠道A", "value": "0.91" },
+                { "label": "渠道B", "value": "0.915" },
+                { "label": "渠道C", "value": "0.92" },
+                { "label": "渠道D", "value": "0.935" },
+                { "label": "渠道E", "value": "0.945" },
+                { "label": "渠道F", "value": "0.96", "highlight": true }
+              ]
+            },
+            {
+              "name": "钱包特殊",
+              "items": [
+                { "label": "渠道TA", "value": "0.965" },
+                { "label": "渠道TB", "value": "0.975" },
+                { "label": "Z1000", "value": "0.96" }
+              ]
+            },
+            {
+              "name": "微信点券",
+              "items": [
+                { "label": "渠道VA", "value": "0.9" },
+                { "label": "VB微信10起", "value": "0.845" },
+                { "label": "VC微信50", "value": "0.885" },
+                { "label": "VD100", "value": "0.89" },
+                { "label": "VE200", "value": "0.915" }
+              ]
+            }
+          ],
+          "copyText": "小刀 14:00 价格模板"
+        },
+        {
+          "title": "新星悦",
+          "subtitle": "网页 备用 Win版",
+          "linkText": "https://example.com/xxy",
+          "accent": "blue",
+          "groups": [
+            {
+              "name": "自动点券",
+              "items": [
+                { "label": "微信点额", "value": "0.835" },
+                { "label": "微信小额", "value": "0.865" },
+                { "label": "微信固额", "value": "0.875" },
+                { "label": "微信通额", "value": "0.905" },
+                { "label": "微信速额", "value": "0.925" },
+                { "label": "钱包直拉", "value": "0.955", "highlight": true }
+              ]
+            },
+            {
+              "name": "微信Q币",
+              "items": [
+                { "label": "微信单端", "value": "0.915" },
+                { "label": "扫码小额", "value": "0.865" },
+                { "label": "扫码固额", "value": "0.895" },
+                { "label": "扫码通额", "value": "0.92" }
+              ]
+            },
+            {
+              "name": "钱包托管",
+              "items": [
+                { "label": "普通", "value": "0.91" },
+                { "label": "加速", "value": "0.915" },
+                { "label": "超速", "value": "0.925" },
+                { "label": "极速", "value": "0.94" },
+                { "label": "秒拉", "value": "0.965", "highlight": true },
+                { "label": "超怪", "value": "0.965" },
+                { "label": "怪额", "value": "0.975" }
+              ]
+            }
+          ],
+          "copyText": "新星悦 14:00 价格代码"
+        },
+        {
+          "title": "GBO",
+          "subtitle": "网页入口",
+          "linkText": "https://example.com/gbo.zip",
+          "accent": "yellow",
+          "groups": [
+            {
+              "name": "公告",
+              "items": [
+                { "label": "1起", "value": "0.79" },
+                { "label": "10起", "value": "0.815" },
+                { "label": "10可限", "value": "0.825" },
+                { "label": "qb10起", "value": "0.85" },
+                { "label": "qb10可限", "value": "0.85" },
+                { "label": "50起", "value": "0.87" },
+                { "label": "qb50起", "value": "0.895" },
+                { "label": "100起", "value": "0.885" },
+                { "label": "qb100起", "value": "0.92" },
+                { "label": "单笔200", "value": "0.895" },
+                { "label": "200极速", "value": "0.91" },
+                { "label": "心悦卡", "value": "0.885" },
+                { "label": "可限", "value": "0.895" }
+              ]
+            }
+          ],
+          "copyText": "GBO 14:00 价格模板"
+        }
+      ]
+    },
+    {
+      "time": "15:00",
+      "updatedAt": "2026-06-29 15:00",
+      "notice": "15:00 价格已更新，用户点击 15:00 即可查看这一版价格。",
+      "sections": [
+        {
+          "title": "新星悦",
+          "subtitle": "网页 备用 Win版",
+          "linkText": "https://example.com/xxy",
+          "accent": "blue",
+          "groups": [
+            {
+              "name": "自动点券",
+              "items": [
+                { "label": "微信点额", "value": "0.835" },
+                { "label": "微信小额", "value": "0.865" },
+                { "label": "微信固额", "value": "0.875" },
+                { "label": "微信通额", "value": "0.905" },
+                { "label": "微信速额", "value": "0.925" },
+                { "label": "钱包直拉", "value": "0.955", "highlight": true }
+              ]
+            },
+            {
+              "name": "微信Q币",
+              "items": [
+                { "label": "微信单端", "value": "0.915" },
+                { "label": "扫码小额", "value": "0.865" },
+                { "label": "扫码固额", "value": "0.895" },
+                { "label": "扫码通额", "value": "0.92" }
+              ]
+            },
+            {
+              "name": "钱包托管",
+              "items": [
+                { "label": "普通", "value": "0.91" },
+                { "label": "加速", "value": "0.915" },
+                { "label": "超速", "value": "0.925" },
+                { "label": "极速", "value": "0.94" },
+                { "label": "秒拉", "value": "0.965", "highlight": true },
+                { "label": "超怪", "value": "0.965" },
+                { "label": "怪额", "value": "0.975" }
+              ]
+            }
+          ],
+          "copyText": "新星悦 15:00 价格代码"
+        },
+        {
+          "title": "GBO",
+          "subtitle": "网页入口",
+          "linkText": "https://example.com/gbo.zip",
+          "accent": "yellow",
+          "groups": [
+            {
+              "name": "公告",
+              "items": [
+                { "label": "1起", "value": "0.795" },
+                { "label": "10起", "value": "0.82" },
+                { "label": "10可限", "value": "0.83" },
+                { "label": "qb10起", "value": "0.855" },
+                { "label": "qb10可限", "value": "0.855" },
+                { "label": "50起", "value": "0.875" },
+                { "label": "qb50起", "value": "0.90" },
+                { "label": "100起", "value": "0.89" },
+                { "label": "qb100起", "value": "0.925" },
+                { "label": "单笔200", "value": "0.90" },
+                { "label": "200极速", "value": "0.915" },
+                { "label": "心悦卡", "value": "0.89" },
+                { "label": "可限", "value": "0.90" }
+              ]
+            }
+          ],
+          "copyText": "GBO 15:00 价格模板"
+        }
+      ]
+    }
+  ]
+}

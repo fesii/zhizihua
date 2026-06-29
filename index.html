@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>公告平台</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <main class="page">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">实时公告</p>
+          <h1 id="site-title">公告平台</h1>
+        </div>
+        <div class="status">
+          <span>更新时间</span>
+          <strong id="updated-at">加载中</strong>
+        </div>
+      </header>
+
+      <section class="notice" aria-label="公告">
+        <div class="notice-mark">!</div>
+        <p id="notice-text">正在读取公告内容...</p>
+      </section>
+
+      <nav class="time-tabs" id="time-tabs" aria-label="时间标签"></nav>
+
+      <section id="content" class="content" aria-live="polite"></section>
+    </main>
+
+    <template id="section-template">
+      <article class="panel">
+        <header class="panel-head">
+          <div>
+            <h2></h2>
+            <p class="meta"></p>
+          </div>
+          <button class="copy-button" type="button">复制</button>
+        </header>
+        <div class="groups"></div>
+      </article>
+    </template>
+
+    <template id="group-template">
+      <div class="group">
+        <h3></h3>
+        <div class="items"></div>
+      </div>
+    </template>
+
+    <template id="item-template">
+      <div class="item">
+        <span class="label"></span>
+        <strong class="value"></strong>
+      </div>
+    </template>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
