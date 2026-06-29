@@ -74,27 +74,27 @@
               "items": [
                 {
                   "label": "微信点额",
-                  "value": "0.825"
+                  "value": "0.999"
                 },
                 {
                   "label": "微信小额",
-                  "value": "0.855"
+                  "value": "0.999"
                 },
                 {
                   "label": "微信固额",
-                  "value": "0.865"
+                  "value": "0.999"
                 },
                 {
                   "label": "微信通额",
-                  "value": "0.895"
+                  "value": "0.999"
                 },
                 {
                   "label": "微信速额",
-                  "value": "0.915"
+                  "value": "0.999"
                 },
                 {
                   "label": "钱包直拉",
-                  "value": "0.945",
+                  "value": "0.999",
                   "highlight": true
                 }
               ]
