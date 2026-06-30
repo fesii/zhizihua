@@ -155,6 +155,90 @@ function parsePastedPrices(text) {
     }));
 }
 
+function cloneData(value) {
+  return JSON.parse(JSON.stringify(value));
+}
+
+function countSectionItems(section) {
+  return (section.groups || []).reduce((sum, group) => sum + (group.items || []).length, 0);
+}
+
+function createEmptySection(title) {
+  return {
+    title,
+    subtitle: "网页入口",
+    linkText: "",
+    accent: "blue",
+    groups: [],
+    copyText: ""
+  };
+}
+
+function findTemplateSection(title, currentPage) {
+  const exactSections = (appData.pages || [])
+    .filter((page) => page !== currentPage)
+    .flatMap((page) => page.sections || [])
+    .filter((section) => section.title === title && countSectionItems(section) > 0)
+    .sort((a, b) => countSectionItems(b) - countSectionItems(a));
+
+  if (exactSections.length) return cloneData(exactSections[0]);
+
+  const anySection = (appData.pages || [])
+    .filter((page) => page !== currentPage)
+    .flatMap((page) => page.sections || [])
+    .filter((section) => countSectionItems(section) > 0)
+    .sort((a, b) => countSectionItems(b) - countSectionItems(a))[0];
+
+  return anySection ? cloneData(anySection) : createEmptySection(title);
+}
+
+function mergeImportedGroups(section, importedGroups) {
+  const importedByLabel = new Map();
+  importedGroups.forEach((group) => {
+    (group.items || []).forEach((item) => {
+      importedByLabel.set(item.label, {
+        ...item,
+        groupName: group.name
+      });
+    });
+  });
+
+  const usedLabels = new Set();
+  section.groups = section.groups || [];
+  section.groups.forEach((group) => {
+    group.items = (group.items || []).map((item) => {
+      const imported = importedByLabel.get(item.label);
+      if (!imported) return item;
+      usedLabels.add(item.label);
+      return {
+        ...item,
+        value: imported.value,
+        highlight: imported.highlight || item.highlight
+      };
+    });
+  });
+
+  importedByLabel.forEach((item, label) => {
+    if (usedLabels.has(label)) return;
+    let group = section.groups.find((entry) => entry.name === item.groupName);
+    if (!group) {
+      group = { name: item.groupName, items: [] };
+      section.groups.push(group);
+    }
+    group.items.push({
+      label: item.label,
+      value: item.value,
+      highlight: item.highlight
+    });
+  });
+
+  section.groups.sort((a, b) => {
+    const left = GROUP_ORDER.indexOf(a.name);
+    const right = GROUP_ORDER.indexOf(b.name);
+    return (left === -1 ? 999 : left) - (right === -1 ? 999 : right);
+  });
+}
+
 function importPastedPrices() {
   const page = getSelectedPage();
   if (!page) {
@@ -178,22 +262,16 @@ function importPastedPrices() {
   page.sections = page.sections || [];
   let section = page.sections.find((entry) => entry.title === sectionTitle);
   if (!section) {
-    section = {
-      title: sectionTitle,
-      subtitle: "网页入口",
-      linkText: "",
-      accent: "blue",
-      groups: [],
-      copyText: ""
-    };
+    section = findTemplateSection(sectionTitle, page);
+    section.title = sectionTitle;
     page.sections.push(section);
   }
 
-  section.groups = groups;
+  mergeImportedGroups(section, groups);
   page.updatedAt = page.updatedAt || page.time;
   page.notice = page.notice || `${page.time} 价格已更新`;
   render();
-  setStatus(`已识别 ${groups.reduce((sum, group) => sum + group.items.length, 0)} 个价格，并保存到 ${page.time} 的 ${sectionTitle}。`);
+  setStatus(`已识别并覆盖 ${groups.reduce((sum, group) => sum + group.items.length, 0)} 个价格，${page.time} 会保留完整通道。`);
 }
 
 function bindInput(element, object, field, afterChange) {
