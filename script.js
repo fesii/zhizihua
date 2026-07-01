@@ -58,7 +58,7 @@ function collectAllItemsByLabel(sectionTitle = "") {
       collectSectionItems(section).forEach((item) => {
         if (!item.label) return;
         if (!linesByLabel.has(item.label)) linesByLabel.set(item.label, []);
-        linesByLabel.get(item.label).push(`${page.time}${item.label}/${item.value}`);
+        linesByLabel.get(item.label).push(`${item.label}${page.time}/${item.value}`);
       });
     });
   });
