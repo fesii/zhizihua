@@ -34,11 +34,11 @@
                 },
                 {
                   "label": "极速",
-                  "value": "0.9"
+                  "value": "0.895"
                 },
                 {
                   "label": "秒拉",
-                  "value": "0.91",
+                  "value": "0.905",
                   "highlight": true
                 }
               ]
