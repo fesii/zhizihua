@@ -4,7 +4,7 @@
       "date": "2026-07-04",
       "siteTitle": "栀子花",
       "activeTime": "00:00",
-      "archivedAt": "2026-07-04T07:29:02.085Z",
+      "archivedAt": "2026-07-04T07:30:44.458Z",
       "pages": [
         {
           "time": "00:00",
@@ -38,11 +38,11 @@
                     },
                     {
                       "label": "极速",
-                      "value": "0.9"
+                      "value": "0.895"
                     },
                     {
                       "label": "秒拉",
-                      "value": "0.91",
+                      "value": "0.905",
                       "highlight": true
                     }
                   ]
