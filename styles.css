@@ -144,6 +144,73 @@ h1 {
   margin: 0 0 18px;
 }
 
+.history-box {
+  margin: 0 0 24px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  box-shadow: 0 8px 22px rgba(31, 58, 88, 0.06);
+}
+
+.history-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.history-head h2 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.history-head p,
+.history-day p {
+  margin: 6px 0 0;
+  color: var(--muted);
+}
+
+.history-controls {
+  display: flex;
+  gap: 10px;
+}
+
+.history-controls input,
+.history-controls button {
+  min-height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  font: inherit;
+  padding: 0 12px;
+}
+
+.history-controls button {
+  border: 0;
+  background: var(--blue-dark);
+  color: #fff;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.history-result {
+  display: grid;
+  gap: 18px;
+  margin-top: 16px;
+}
+
+.history-day {
+  display: grid;
+  gap: 10px;
+}
+
+.history-day h3 {
+  margin: 0;
+  color: var(--blue-dark);
+  font-size: 21px;
+}
+
 .content {
   display: grid;
   gap: 28px;
@@ -274,8 +341,13 @@ h1 {
   }
 
   .topbar,
+  .history-head,
   .panel-head {
     align-items: stretch;
+    flex-direction: column;
+  }
+
+  .history-controls {
     flex-direction: column;
   }
 

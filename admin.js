@@ -66,6 +66,17 @@ function getGithubApiUrl(config) {
   return `https://api.github.com/repos/${config.owner}/${config.repo}/contents/${encodeURIComponent(config.path)}?ref=${encodeURIComponent(config.branch)}`;
 }
 
+function getGithubFileApiUrl(config, path) {
+  return `https://api.github.com/repos/${config.owner}/${config.repo}/contents/${encodeURIComponent(path)}?ref=${encodeURIComponent(config.branch)}`;
+}
+
+function getHistoryPath() {
+  const config = getGithubConfig();
+  const parts = config.path.split("/");
+  parts[parts.length - 1] = "history.json";
+  return parts.join("/");
+}
+
 function utf8ToBase64(text) {
   const bytes = new TextEncoder().encode(text);
   let binary = "";
@@ -103,6 +114,32 @@ async function githubRequest(url, options = {}) {
   }
 
   return response.json();
+}
+
+async function loadGithubContentFile(path) {
+  const config = getGithubConfig();
+  try {
+    return await githubRequest(getGithubFileApiUrl(config, path));
+  } catch (error) {
+    if (String(error.message).includes("Not Found")) return null;
+    throw error;
+  }
+}
+
+async function saveGithubContentFile(path, content, message, sha = "") {
+  const config = getGithubConfig();
+  const url = `https://api.github.com/repos/${config.owner}/${config.repo}/contents/${encodeURIComponent(path)}`;
+  const body = {
+    message,
+    content: utf8ToBase64(content),
+    branch: config.branch
+  };
+  if (sha) body.sha = sha;
+  return githubRequest(url, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body)
+  });
 }
 
 function getSelectedPage() {
@@ -162,6 +199,59 @@ function parsePastedPrices(text) {
 
 function cloneData(value) {
   return JSON.parse(JSON.stringify(value));
+}
+
+function normalizeDate(year, month, day) {
+  const paddedMonth = String(month).padStart(2, "0");
+  const paddedDay = String(day).padStart(2, "0");
+  return `${year}-${paddedMonth}-${paddedDay}`;
+}
+
+function extractDate(value) {
+  const text = String(value || "");
+  const full = text.match(/(20\d{2})[-/.年](\d{1,2})[-/.月](\d{1,2})/);
+  if (full) return normalizeDate(full[1], full[2], full[3]);
+
+  const short = text.match(/(^|[^\d])(\d{1,2})[./月](\d{1,2})(日)?($|[^\d])/);
+  if (short) return normalizeDate(new Date().getFullYear(), short[2], short[3]);
+
+  return "";
+}
+
+function normalizeTime(value) {
+  return String(value || "").replace(".", ":").padStart(5, "0");
+}
+
+function getBusinessDate() {
+  const midnightPage = (appData.pages || []).find((page) => normalizeTime(page.time) === "00:00");
+  return extractDate(midnightPage?.updatedAt) || extractDate(appData.updatedAt) || new Date().toISOString().slice(0, 10);
+}
+
+async function archiveCurrentPricesToGithub() {
+  const historyPath = getHistoryPath();
+  const historyFile = await loadGithubContentFile(historyPath);
+  const history = historyFile ? JSON.parse(base64ToUtf8(historyFile.content)) : { records: [] };
+  const date = getBusinessDate();
+  const record = {
+    date,
+    siteTitle: appData.siteTitle || "",
+    activeTime: appData.activeTime || "",
+    archivedAt: new Date().toISOString(),
+    pages: cloneData(appData.pages || [])
+  };
+
+  history.records = (history.records || []).filter((entry) => entry.date !== date);
+  history.records.push(record);
+  history.records.sort((a, b) => a.date.localeCompare(b.date));
+
+  await saveGithubContentFile(
+    historyPath,
+    JSON.stringify(history, null, 2),
+    `Archive prices ${date}`,
+    historyFile?.sha || ""
+  );
+
+  return date;
 }
 
 function countSectionItems(section) {
@@ -493,21 +583,16 @@ async function saveToGithub() {
     githubFileSha = latest.sha;
   }
 
-  const json = JSON.stringify(appData, null, 2);
-  const url = `https://api.github.com/repos/${config.owner}/${config.repo}/contents/${encodeURIComponent(config.path)}`;
-  const result = await githubRequest(url, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      message: `Update prices ${new Date().toLocaleString("zh-CN")}`,
-      content: utf8ToBase64(json),
-      sha: githubFileSha,
-      branch: config.branch
-    })
-  });
+  const result = await saveGithubContentFile(
+    config.path,
+    JSON.stringify(appData, null, 2),
+    `Update prices ${new Date().toLocaleString("zh-CN")}`,
+    githubFileSha
+  );
 
   githubFileSha = result.content.sha;
-  setStatus("已保存到 GitHub。客户网页等待几十秒后刷新即可看到新内容。");
+  const archivedDate = await archiveCurrentPricesToGithub();
+  setStatus(`已保存到 GitHub，并归档到 ${archivedDate}。客户网页等待几十秒后刷新即可看到新内容。`);
 }
 
 async function openDataFile() {

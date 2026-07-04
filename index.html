@@ -30,6 +30,20 @@
         <button id="copy-all-prices" class="copy-button" type="button">复制全部价格模板</button>
       </div>
 
+      <section class="history-box" aria-label="查询历史价格">
+        <div class="history-head">
+          <div>
+            <h2>历史价格</h2>
+            <p>输入日期查询当天所有时间段</p>
+          </div>
+          <div class="history-controls">
+            <input id="history-date" type="date">
+            <button id="history-search" type="button">查询</button>
+          </div>
+        </div>
+        <div id="history-result" class="history-result"></div>
+      </section>
+
       <section id="content" class="content" aria-live="polite"></section>
     </main>
 
