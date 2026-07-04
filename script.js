@@ -3,6 +3,7 @@ const timeTabs = document.querySelector("#time-tabs");
 const copyAllButton = document.querySelector("#copy-all-prices");
 const historyDateInput = document.querySelector("#history-date");
 const historySearchButton = document.querySelector("#history-search");
+const historyCopyButton = document.querySelector("#history-copy");
 const historyResult = document.querySelector("#history-result");
 const sectionTemplate = document.querySelector("#section-template");
 const groupTemplate = document.querySelector("#group-template");
@@ -10,6 +11,7 @@ const itemTemplate = document.querySelector("#item-template");
 let appData = null;
 let selectedTime = "";
 let historyData = { records: [] };
+let selectedHistoryRecord = null;
 
 async function loadData() {
   const response = await fetch(`./data.json?v=${Date.now()}`, { cache: "no-store" });
@@ -141,6 +143,7 @@ function renderSections(sections) {
 
 function renderHistorySections(record) {
   historyResult.replaceChildren();
+  selectedHistoryRecord = record || null;
   if (!record) {
     historyResult.innerHTML = `<div class="error">没有找到这一天的历史价格</div>`;
     return;
@@ -195,11 +198,29 @@ function renderHistorySections(record) {
 function searchHistory() {
   const date = historyDateInput.value;
   if (!date) {
+    selectedHistoryRecord = null;
     historyResult.innerHTML = `<div class="error">请先选择日期</div>`;
     return;
   }
   const record = (historyData.records || []).find((entry) => entry.date === date);
   renderHistorySections(record);
+}
+
+function buildHistoryPriceTemplate(record) {
+  const linesByLabel = new Map();
+  (record?.pages || []).forEach((page) => {
+    (page.sections || []).forEach((section) => {
+      collectSectionItems(section).forEach((item) => {
+        if (!item.label) return;
+        if (!linesByLabel.has(item.label)) linesByLabel.set(item.label, []);
+        linesByLabel.get(item.label).push(`${item.label}${page.time}/${item.value}`);
+      });
+    });
+  });
+
+  return Array.from(linesByLabel.values())
+    .flat()
+    .join("\n");
 }
 
 function getSelectedPage() {
@@ -225,6 +246,14 @@ copyAllButton.addEventListener("click", async () => {
 });
 
 historySearchButton.addEventListener("click", searchHistory);
+
+historyCopyButton.addEventListener("click", async () => {
+  if (!selectedHistoryRecord) {
+    historyResult.innerHTML = `<div class="error">请先查询到某一天的历史价格</div>`;
+    return;
+  }
+  await copyToClipboard(buildHistoryPriceTemplate(selectedHistoryRecord), historyCopyButton, "复制历史价格模板");
+});
 
 Promise.all([loadData(), loadHistory()])
   .then(([data, history]) => {
