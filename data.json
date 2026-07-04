@@ -34,11 +34,96 @@
                 },
                 {
                   "label": "极速",
-                  "value": "0.895"
+                  "value": "0.9"
                 },
                 {
                   "label": "秒拉",
-                  "value": "0.905",
+                  "value": "0.91",
+                  "highlight": true
+                }
+              ]
+            },
+            {
+              "name": "钱包特殊",
+              "items": [
+                {
+                  "label": "怪额",
+                  "value": "0.955"
+                },
+                {
+                  "label": "超怪",
+                  "value": "0.965"
+                },
+                {
+                  "label": "大额",
+                  "value": "0.91"
+                }
+              ]
+            },
+            {
+              "name": "微信通道",
+              "items": [
+                {
+                  "label": "微信通额",
+                  "value": "0.885"
+                },
+                {
+                  "label": "微信速额",
+                  "value": "0.895"
+                },
+                {
+                  "label": "微信固额",
+                  "value": "0.87"
+                },
+                {
+                  "label": "微信小额",
+                  "value": "0.84",
+                  "highlight": false
+                }
+              ]
+            }
+          ],
+          "copyText": "小刀 00:00 价格模板\n"
+        }
+      ]
+    },
+    {
+      "time": "15.30",
+      "updatedAt": "15.30",
+      "notice": "15.30 价格已更新",
+      "sections": [
+        {
+          "title": "小刀",
+          "subtitle": "网页入口",
+          "linkText": "https://el5.q8z6i1l9d6o8e.top/admin",
+          "accent": "blue",
+          "groups": [
+            {
+              "name": "钱包整百",
+              "items": [
+                {
+                  "label": "普通",
+                  "value": "0.875"
+                },
+                {
+                  "label": "加速",
+                  "value": "0.88"
+                },
+                {
+                  "label": "超速",
+                  "value": "0.885"
+                },
+                {
+                  "label": "高速",
+                  "value": "0.89"
+                },
+                {
+                  "label": "极速",
+                  "value": "0.9"
+                },
+                {
+                  "label": "秒拉",
+                  "value": "0.91",
                   "highlight": true
                 }
               ]
