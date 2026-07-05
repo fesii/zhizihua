@@ -2,6 +2,7 @@ const timeTabs = document.querySelector("#time-tabs");
 const editor = document.querySelector("#editor");
 const statusText = document.querySelector("#save-status");
 const siteTitleInput = document.querySelector("#site-title-input");
+const businessDateInput = document.querySelector("#business-date-input");
 const activeTimeInput = document.querySelector("#active-time-input");
 const openFileButton = document.querySelector("#open-file");
 const saveFileButton = document.querySelector("#save-file");
@@ -223,8 +224,35 @@ function normalizeTime(value) {
 }
 
 function getBusinessDate() {
+  if (businessDateInput.value) return businessDateInput.value;
   const midnightPage = (appData.pages || []).find((page) => normalizeTime(page.time) === "00:00");
   return extractDate(midnightPage?.updatedAt) || extractDate(appData.updatedAt) || new Date().toISOString().slice(0, 10);
+}
+
+function getDataBusinessDate() {
+  const midnightPage = (appData.pages || []).find((page) => normalizeTime(page.time) === "00:00");
+  return extractDate(midnightPage?.updatedAt) || extractDate(appData.updatedAt) || new Date().toISOString().slice(0, 10);
+}
+
+function getMidnightPage() {
+  return (appData.pages || []).find((page) => normalizeTime(page.time) === "00:00");
+}
+
+function applyBusinessDate(date) {
+  if (!date) return;
+  let midnightPage = getMidnightPage();
+  if (!midnightPage) {
+    midnightPage = createPage("00:00");
+    appData.pages.unshift(midnightPage);
+  }
+
+  const timeText = normalizeTime(midnightPage.time) || "00:00";
+  midnightPage.updatedAt = `${date} ${timeText}`;
+  appData.updatedAt = `${date} ${timeText}`;
+}
+
+function renderBusinessDate() {
+  businessDateInput.value = getDataBusinessDate();
 }
 
 async function archiveCurrentPricesToGithub() {
@@ -531,6 +559,7 @@ function renderEditor() {
 
 function render() {
   siteTitleInput.value = appData.siteTitle || "";
+  renderBusinessDate();
   renderActiveTimeSelect();
   renderTimeTabs();
   renderEditor();
@@ -549,6 +578,7 @@ function downloadData() {
 async function saveData() {
   appData.siteTitle = siteTitleInput.value;
   appData.activeTime = activeTimeInput.value || selectedTime;
+  applyBusinessDate(businessDateInput.value);
   const json = JSON.stringify(appData, null, 2);
 
   if (fileHandle?.createWritable) {
@@ -576,6 +606,7 @@ async function loadFromGithub() {
 async function saveToGithub() {
   appData.siteTitle = siteTitleInput.value;
   appData.activeTime = activeTimeInput.value || selectedTime;
+  applyBusinessDate(businessDateInput.value);
 
   const config = getGithubConfig();
   if (!githubFileSha) {
@@ -622,6 +653,12 @@ function createPage(time) {
 
 siteTitleInput.addEventListener("input", () => {
   appData.siteTitle = siteTitleInput.value;
+});
+
+businessDateInput.addEventListener("change", () => {
+  applyBusinessDate(businessDateInput.value);
+  renderEditor();
+  setStatus(`修改日期已设为 ${businessDateInput.value}，保存到 GitHub 后会按这个日期归档。`);
 });
 
 activeTimeInput.addEventListener("change", () => {
