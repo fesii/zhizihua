@@ -1,10 +1,10 @@
 {
   "siteTitle": "栀子花",
-  "activeTime": "00:00",
+  "activeTime": "13:00",
   "pages": [
     {
       "time": "00:00",
-      "updatedAt": "2026-07-11 00:00",
+      "updatedAt": "2026-07-12 00:00",
       "notice": "00:00 价格已更新，点击 00:00 即可查看这一版价格。",
       "sections": [
         {
@@ -103,27 +103,27 @@
               "items": [
                 {
                   "label": "普通",
-                  "value": "0.895"
+                  "value": "0.885"
                 },
                 {
                   "label": "加速",
-                  "value": "0.9"
+                  "value": "0.89"
                 },
                 {
                   "label": "超速",
-                  "value": "0.905"
+                  "value": "0.895"
                 },
                 {
                   "label": "高速",
-                  "value": "0.91"
+                  "value": "0.9"
                 },
                 {
                   "label": "极速",
-                  "value": "0.915"
+                  "value": "0.905"
                 },
                 {
                   "label": "秒拉",
-                  "value": "0.925",
+                  "value": "0.915",
                   "highlight": true
                 }
               ]
@@ -141,7 +141,7 @@
                 },
                 {
                   "label": "大额",
-                  "value": "0.935"
+                  "value": "0.93"
                 }
               ]
             },
@@ -173,5 +173,5 @@
       ]
     }
   ],
-  "updatedAt": "2026-07-11 00:00"
+  "updatedAt": "2026-07-12 00:00"
 }
