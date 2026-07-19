@@ -4,7 +4,7 @@
   "pages": [
     {
       "time": "00:00",
-      "updatedAt": "2026-07-19 00:00",
+      "updatedAt": "2026-07-18 00:00",
       "notice": "00:00 价格已更新，点击 00:00 即可查看这一版价格。",
       "sections": [
         {
@@ -78,16 +78,6 @@
                 {
                   "label": "微信小额",
                   "value": "0.855",
-                  "highlight": false
-                }
-              ]
-            },
-            {
-              "name": "未分组",
-              "items": [
-                {
-                  "label": "直拉",
-                  "value": "0.945",
                   "highlight": false
                 }
               ]
@@ -176,16 +166,6 @@
                   "highlight": false
                 }
               ]
-            },
-            {
-              "name": "未分组",
-              "items": [
-                {
-                  "label": "直拉",
-                  "value": "0.945",
-                  "highlight": false
-                }
-              ]
             }
           ],
           "copyText": "小刀 00:00 价格模板\n"
@@ -193,5 +173,5 @@
       ]
     }
   ],
-  "updatedAt": "2026-07-19 00:00"
+  "updatedAt": "2026-07-18 00:00"
 }
