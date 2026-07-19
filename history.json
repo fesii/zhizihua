@@ -2454,7 +2454,7 @@
       "date": "2026-07-19",
       "siteTitle": "栀子花",
       "activeTime": "00:00",
-      "archivedAt": "2026-07-19T05:14:57.794Z",
+      "archivedAt": "2026-07-19T11:12:52.668Z",
       "pages": [
         {
           "time": "00:00",
@@ -2532,16 +2532,6 @@
                     {
                       "label": "微信小额",
                       "value": "0.855",
-                      "highlight": false
-                    }
-                  ]
-                },
-                {
-                  "name": "未分组",
-                  "items": [
-                    {
-                      "label": "直拉",
-                      "value": "0.945",
                       "highlight": false
                     }
                   ]
@@ -2627,16 +2617,6 @@
                     {
                       "label": "微信小额",
                       "value": "0.855",
-                      "highlight": false
-                    }
-                  ]
-                },
-                {
-                  "name": "未分组",
-                  "items": [
-                    {
-                      "label": "直拉",
-                      "value": "0.945",
                       "highlight": false
                     }
                   ]
