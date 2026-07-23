@@ -204,11 +204,17 @@
                 },
                 {
                   "label": "极速",
-                  "value": "0.92"
+                  "value": "0.92",
+                  "highlight": true
                 },
                 {
                   "label": "秒拉",
                   "value": "0.93",
+                  "highlight": true
+                },
+                {
+                  "label": "大额",
+                  "value": "0.935",
                   "highlight": true
                 }
               ]
@@ -223,10 +229,6 @@
                 {
                   "label": "超怪",
                   "value": "0.95"
-                },
-                {
-                  "label": "大额",
-                  "value": "0.935"
                 }
               ]
             },
