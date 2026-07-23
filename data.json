@@ -4,93 +4,8 @@
   "pages": [
     {
       "time": "00:00",
-      "updatedAt": "2026-07-22 00:00",
+      "updatedAt": "2026-07-23 00:00",
       "notice": "00:00 价格已更新，点击 00:00 即可查看这一版价格。",
-      "sections": [
-        {
-          "title": "小刀",
-          "subtitle": "网页入口",
-          "linkText": "https://el5.q8z6i1l9d6o8e.top/admin",
-          "accent": "blue",
-          "groups": [
-            {
-              "name": "钱包整百",
-              "items": [
-                {
-                  "label": "普通",
-                  "value": "0.885"
-                },
-                {
-                  "label": "加速",
-                  "value": "0.89"
-                },
-                {
-                  "label": "超速",
-                  "value": "0.895"
-                },
-                {
-                  "label": "高速",
-                  "value": "0.9"
-                },
-                {
-                  "label": "极速",
-                  "value": "0.905"
-                },
-                {
-                  "label": "秒拉",
-                  "value": "0.915",
-                  "highlight": true
-                }
-              ]
-            },
-            {
-              "name": "钱包特殊",
-              "items": [
-                {
-                  "label": "怪额",
-                  "value": "0.94"
-                },
-                {
-                  "label": "超怪",
-                  "value": "0.95"
-                },
-                {
-                  "label": "大额",
-                  "value": "0.92"
-                }
-              ]
-            },
-            {
-              "name": "微信通道",
-              "items": [
-                {
-                  "label": "微信通额",
-                  "value": "0.885"
-                },
-                {
-                  "label": "微信速额",
-                  "value": "0.895"
-                },
-                {
-                  "label": "微信固额",
-                  "value": "0.865"
-                },
-                {
-                  "label": "微信小额",
-                  "value": "0.855",
-                  "highlight": false
-                }
-              ]
-            }
-          ],
-          "copyText": "小刀 00:00 价格模板\n"
-        }
-      ]
-    },
-    {
-      "time": "18:25",
-      "updatedAt": "18:25",
-      "notice": "2026-07-22 18:25 价格已更新",
       "sections": [
         {
           "title": "小刀",
@@ -171,7 +86,177 @@
           "copyText": "小刀 00:00 价格模板\n"
         }
       ]
+    },
+    {
+      "time": "09:10",
+      "updatedAt": "09:10",
+      "notice": "09:10 价格已更新",
+      "sections": [
+        {
+          "title": "小刀",
+          "subtitle": "网页入口",
+          "linkText": "https://el5.q8z6i1l9d6o8e.top/admin",
+          "accent": "blue",
+          "groups": [
+            {
+              "name": "钱包整百",
+              "items": [
+                {
+                  "label": "普通",
+                  "value": "0.895"
+                },
+                {
+                  "label": "加速",
+                  "value": "0.9"
+                },
+                {
+                  "label": "超速",
+                  "value": "0.905"
+                },
+                {
+                  "label": "高速",
+                  "value": "0.91"
+                },
+                {
+                  "label": "极速",
+                  "value": "0.915"
+                },
+                {
+                  "label": "秒拉",
+                  "value": "0.925",
+                  "highlight": true
+                }
+              ]
+            },
+            {
+              "name": "钱包特殊",
+              "items": [
+                {
+                  "label": "怪额",
+                  "value": "0.94"
+                },
+                {
+                  "label": "超怪",
+                  "value": "0.95"
+                },
+                {
+                  "label": "大额",
+                  "value": "0.93"
+                }
+              ]
+            },
+            {
+              "name": "微信通道",
+              "items": [
+                {
+                  "label": "微信通额",
+                  "value": "0.885"
+                },
+                {
+                  "label": "微信速额",
+                  "value": "0.895"
+                },
+                {
+                  "label": "微信固额",
+                  "value": "0.865"
+                },
+                {
+                  "label": "微信小额",
+                  "value": "0.855",
+                  "highlight": false
+                }
+              ]
+            }
+          ],
+          "copyText": "小刀 00:00 价格模板\n"
+        }
+      ]
+    },
+    {
+      "time": "12:25",
+      "updatedAt": "2026-07-23 12:25",
+      "notice": "2026-07-23 12:25 价格已更新",
+      "sections": [
+        {
+          "title": "小刀",
+          "subtitle": "网页入口",
+          "linkText": "https://el5.q8z6i1l9d6o8e.top/admin",
+          "accent": "blue",
+          "groups": [
+            {
+              "name": "钱包整百",
+              "items": [
+                {
+                  "label": "普通",
+                  "value": "0.895"
+                },
+                {
+                  "label": "加速",
+                  "value": "0.9"
+                },
+                {
+                  "label": "超速",
+                  "value": "0.905"
+                },
+                {
+                  "label": "高速",
+                  "value": "0.91"
+                },
+                {
+                  "label": "极速",
+                  "value": "0.92"
+                },
+                {
+                  "label": "秒拉",
+                  "value": "0.93",
+                  "highlight": true
+                }
+              ]
+            },
+            {
+              "name": "钱包特殊",
+              "items": [
+                {
+                  "label": "怪额",
+                  "value": "0.94"
+                },
+                {
+                  "label": "超怪",
+                  "value": "0.95"
+                },
+                {
+                  "label": "大额",
+                  "value": "0.935"
+                }
+              ]
+            },
+            {
+              "name": "微信通道",
+              "items": [
+                {
+                  "label": "微信通额",
+                  "value": "0.885"
+                },
+                {
+                  "label": "微信速额",
+                  "value": "0.895"
+                },
+                {
+                  "label": "微信固额",
+                  "value": "0.865"
+                },
+                {
+                  "label": "微信小额",
+                  "value": "0.855",
+                  "highlight": false
+                }
+              ]
+            }
+          ],
+          "copyText": "小刀 00:00 价格模板\n"
+        }
+      ]
     }
   ],
-  "updatedAt": "2026-07-22 00:00"
+  "updatedAt": "2026-07-23 00:00"
 }
