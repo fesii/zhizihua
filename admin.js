@@ -147,6 +147,10 @@ function getSelectedPage() {
   return appData.pages.find((page) => page.time === selectedTime) || appData.pages[0];
 }
 
+function getSelectedPageIndex() {
+  return (appData.pages || []).findIndex((page) => page.time === selectedTime);
+}
+
 function normalizePrice(rawValue) {
   if (rawValue.includes(".")) return String(Number(rawValue));
   return String(Number(`0.${rawValue}`));
@@ -226,12 +230,12 @@ function normalizeTime(value) {
 function getBusinessDate() {
   if (businessDateInput.value) return businessDateInput.value;
   const midnightPage = (appData.pages || []).find((page) => normalizeTime(page.time) === "00:00");
-  return extractDate(midnightPage?.updatedAt) || extractDate(appData.updatedAt) || new Date().toISOString().slice(0, 10);
+  return extractDate(midnightPage && midnightPage.updatedAt) || extractDate(appData.updatedAt) || new Date().toISOString().slice(0, 10);
 }
 
 function getDataBusinessDate() {
   const midnightPage = (appData.pages || []).find((page) => normalizeTime(page.time) === "00:00");
-  return extractDate(midnightPage?.updatedAt) || extractDate(appData.updatedAt) || new Date().toISOString().slice(0, 10);
+  return extractDate(midnightPage && midnightPage.updatedAt) || extractDate(appData.updatedAt) || new Date().toISOString().slice(0, 10);
 }
 
 function getMidnightPage() {
@@ -276,7 +280,7 @@ async function archiveCurrentPricesToGithub() {
     historyPath,
     JSON.stringify(history, null, 2),
     `Archive prices ${date}`,
-    historyFile?.sha || ""
+    (historyFile && historyFile.sha) || ""
   );
 
   return date;
@@ -309,9 +313,44 @@ function getPreviousPage(currentPage) {
   return pages.find((page) => page !== currentPage && countSectionItems({ groups: (page.sections || []).flatMap((section) => section.groups || []) }) > 0);
 }
 
+function getPreviousPageForSelectedTime() {
+  const pages = appData.pages || [];
+  const index = getSelectedPageIndex();
+  if (index > 0) return pages[index - 1];
+  return null;
+}
+
+function findItemValueInPage(page, label) {
+  if (!page || !label) return "";
+  for (const section of page.sections || []) {
+    for (const group of section.groups || []) {
+      for (const item of group.items || []) {
+        if (item.label === label || item.label.includes(label) || label.includes(item.label)) {
+          return String(item.value || "");
+        }
+      }
+    }
+  }
+  return "";
+}
+
+function isItemChangedFromPrevious(item) {
+  const previousPage = getPreviousPageForSelectedTime();
+  const previousValue = findItemValueInPage(previousPage, item.label);
+  if (!previousValue) return false;
+  return String(item.value || "") !== previousValue;
+}
+
+function updateItemChangedStyle(item, itemCard) {
+  const changed = isItemChangedFromPrevious(item);
+  itemCard.classList.toggle("changed-price", changed);
+  const valueInput = itemCard.querySelector('[data-field="value"]');
+  if (valueInput) valueInput.classList.toggle("changed-price-input", changed);
+}
+
 function findTemplateSection(currentPage) {
   const previousPage = getPreviousPage(currentPage);
-  const previousSection = (previousPage?.sections || [])
+  const previousSection = ((previousPage && previousPage.sections) || [])
     .filter((section) => countSectionItems(section) > 0)
     .sort((a, b) => countSectionItems(b) - countSectionItems(a))[0];
 
@@ -446,10 +485,11 @@ function bindCheckbox(element, object, field) {
 
 function renderTimeTabs() {
   timeTabs.replaceChildren();
+  const date = businessDateInput.value || getDataBusinessDate();
   appData.pages.forEach((page) => {
     const button = document.createElement("button");
     button.type = "button";
-    button.textContent = page.time;
+    button.textContent = `${date} ${page.time}`;
     button.className = page.time === selectedTime ? "active" : "";
     button.addEventListener("click", () => {
       selectedTime = page.time;
@@ -472,13 +512,17 @@ function renderActiveTimeSelect() {
 
 function renderItem(item, items, group) {
   const node = itemTemplate.content.cloneNode(true);
+  const itemCard = node.querySelector(".item-editor");
   bindInput(node.querySelector('[data-field="label"]'), item, "label");
-  bindInput(node.querySelector('[data-field="value"]'), item, "value");
+  bindInput(node.querySelector('[data-field="value"]'), item, "value", () => {
+    updateItemChangedStyle(item, itemCard);
+  });
   bindCheckbox(node.querySelector('[data-field="highlight"]'), item, "highlight");
   node.querySelector(".remove-item").addEventListener("click", () => {
     group.items = group.items.filter((entry) => entry !== item);
     render();
   });
+  updateItemChangedStyle(item, itemCard);
   items.append(node);
 }
 
@@ -581,7 +625,7 @@ async function saveData() {
   applyBusinessDate(businessDateInput.value);
   const json = JSON.stringify(appData, null, 2);
 
-  if (fileHandle?.createWritable) {
+  if (fileHandle && fileHandle.createWritable) {
     const writable = await fileHandle.createWritable();
     await writable.write(json);
     await writable.close();
@@ -598,7 +642,7 @@ async function loadFromGithub() {
   const result = await githubRequest(getGithubApiUrl(config));
   appData = JSON.parse(base64ToUtf8(result.content));
   githubFileSha = result.sha;
-  selectedTime = appData.activeTime || appData.pages?.[0]?.time || "";
+  selectedTime = appData.activeTime || ((appData.pages && appData.pages[0] && appData.pages[0].time) || "");
   render();
   setStatus("已读取 GitHub 上的最新 data.json。");
 }
@@ -637,7 +681,7 @@ async function openDataFile() {
   const file = await handle.getFile();
   appData = JSON.parse(await file.text());
   fileHandle = handle;
-  selectedTime = appData.activeTime || appData.pages?.[0]?.time || "";
+  selectedTime = appData.activeTime || ((appData.pages && appData.pages[0] && appData.pages[0].time) || "");
   render();
   setStatus("已打开 data.json。之后点击保存并同步会直接写回这个文件。");
 }
@@ -657,6 +701,7 @@ siteTitleInput.addEventListener("input", () => {
 
 businessDateInput.addEventListener("change", () => {
   applyBusinessDate(businessDateInput.value);
+  renderTimeTabs();
   renderEditor();
   setStatus(`修改日期已设为 ${businessDateInput.value}，保存到 GitHub 后会按这个日期归档。`);
 });
@@ -710,7 +755,7 @@ deleteTimeButton.addEventListener("click", () => {
   const page = getSelectedPage();
   if (!page || !window.confirm(`确定删除 ${page.time} 吗？`)) return;
   appData.pages = appData.pages.filter((entry) => entry !== page);
-  selectedTime = appData.pages[0]?.time || "";
+  selectedTime = (appData.pages[0] && appData.pages[0].time) || "";
   if (appData.activeTime === page.time) appData.activeTime = selectedTime;
   render();
 });
@@ -724,7 +769,7 @@ clearImportButton.addEventListener("click", () => {
 loadDefaultData()
   .then((data) => {
     appData = data;
-    selectedTime = data.activeTime || data.pages?.[0]?.time || "";
+    selectedTime = data.activeTime || ((data.pages && data.pages[0] && data.pages[0].time) || "");
     render();
     setStatus("已读取 data.json。建议先点“打开 data.json”选择文件，之后可以直接保存并同步。");
   })

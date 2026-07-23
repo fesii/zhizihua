@@ -126,6 +126,12 @@
   margin-bottom: 18px;
 }
 
+.admin-page .time-tabs button {
+  min-width: 148px;
+  padding: 0 14px;
+  font-size: 16px;
+}
+
 .admin-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
@@ -163,6 +169,17 @@
 .item-editor {
   grid-template-columns: minmax(120px, 1fr) minmax(110px, 150px) 72px 70px;
   min-height: 64px;
+}
+
+.item-editor.changed-price {
+  border-left-color: var(--red);
+}
+
+.item-editor .changed-price-input {
+  border-color: #f1a6b4;
+  color: var(--red);
+  font-weight: 900;
+  background: #fff5f7;
 }
 
 .check-label {
