@@ -32,12 +32,38 @@ function setText(selector, value) {
   if (element) element.textContent = value || "";
 }
 
+function normalizeDate(year, month, day) {
+  return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+}
+
+function extractDate(value) {
+  const text = String(value || "");
+  const full = text.match(/(20\d{2})[-/.年](\d{1,2})[-/.月](\d{1,2})/);
+  if (full) return normalizeDate(full[1], full[2], full[3]);
+
+  const short = text.match(/(^|[^\d])(\d{1,2})[./月](\d{1,2})(日)?($|[^\d])/);
+  if (short) return normalizeDate(new Date().getFullYear(), short[2], short[3]);
+
+  return "";
+}
+
+function normalizeTime(value) {
+  return String(value || "").replace(".", ":").padStart(5, "0");
+}
+
+function getBusinessDate() {
+  const pages = appData.pages || [];
+  const midnightPage = pages.find((page) => normalizeTime(page.time) === "00:00");
+  return extractDate(midnightPage && midnightPage.updatedAt) || extractDate(appData.updatedAt);
+}
+
 function renderTimeTabs(pages, activeTime) {
   timeTabs.replaceChildren();
+  const date = getBusinessDate();
   pages.forEach((page) => {
     const button = document.createElement("button");
     button.type = "button";
-    button.textContent = page.time;
+    button.textContent = [date, page.time].filter(Boolean).join(" ");
     button.className = page.time === activeTime ? "active" : "";
     button.addEventListener("click", () => {
       selectedTime = page.time;
@@ -58,6 +84,38 @@ function collectSectionItems(section) {
     });
   });
   return items;
+}
+
+function getSelectedPageIndex() {
+  const pages = appData.pages || [];
+  return pages.findIndex((page) => page.time === selectedTime);
+}
+
+function getPreviousPageForSelectedTime() {
+  const pages = appData.pages || [];
+  const index = getSelectedPageIndex();
+  if (index > 0) return pages[index - 1];
+  return null;
+}
+
+function findItemValueInPage(page, label) {
+  if (!page || !label) return "";
+  for (const section of page.sections || []) {
+    for (const group of section.groups || []) {
+      for (const item of group.items || []) {
+        if (item.label === label || item.label.includes(label) || label.includes(item.label)) {
+          return String(item.value || "");
+        }
+      }
+    }
+  }
+  return "";
+}
+
+function isItemChangedFromPrevious(item) {
+  const previousValue = findItemValueInPage(getPreviousPageForSelectedTime(), item.label);
+  if (!previousValue) return false;
+  return String(item.value || "") !== previousValue;
 }
 
 function collectAllItemsByLabel(sectionTitle = "") {
@@ -129,6 +187,7 @@ function renderSections(sections) {
         const itemNode = itemTemplate.content.cloneNode(true);
         const itemCard = itemNode.querySelector(".item");
         itemCard.classList.toggle("highlight", Boolean(item.highlight));
+        itemCard.classList.toggle("changed-price", isItemChangedFromPrevious(item));
         itemNode.querySelector(".label").textContent = item.label;
         itemNode.querySelector(".value").textContent = item.value;
         items.append(itemNode);
@@ -208,7 +267,7 @@ function searchHistory() {
 
 function buildHistoryPriceTemplate(record) {
   const linesByLabel = new Map();
-  (record?.pages || []).forEach((page) => {
+  ((record && record.pages) || []).forEach((page) => {
     (page.sections || []).forEach((section) => {
       collectSectionItems(section).forEach((item) => {
         if (!item.label) return;
@@ -259,7 +318,7 @@ Promise.all([loadData(), loadHistory()])
   .then(([data, history]) => {
     appData = data;
     historyData = history || { records: [] };
-    selectedTime = data.activeTime || data.pages?.[0]?.time || "";
+    selectedTime = data.activeTime || ((data.pages && data.pages[0] && data.pages[0].time) || "");
     document.title = data.siteTitle || "公告平台";
     setText("#site-title", data.siteTitle);
     renderPage();

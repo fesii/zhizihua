@@ -117,7 +117,7 @@ h1 {
 }
 
 .time-tabs button {
-  min-width: 74px;
+  min-width: 148px;
   height: 40px;
   border: 0;
   border-radius: 20px;
@@ -325,6 +325,14 @@ h1 {
   color: var(--red);
 }
 
+.item.changed-price {
+  border-left-color: var(--red);
+}
+
+.item.changed-price .value {
+  color: var(--red);
+}
+
 .error {
   padding: 22px;
   border: 1px solid #ffd1d9;
@@ -362,7 +370,7 @@ h1 {
   }
 
   .time-tabs button {
-    min-width: 64px;
+    min-width: 138px;
     height: 36px;
     font-size: 15px;
   }
