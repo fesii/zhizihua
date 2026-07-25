@@ -3854,7 +3854,7 @@
       "date": "2026-07-25",
       "siteTitle": "栀子花",
       "activeTime": "00:00",
-      "archivedAt": "2026-07-25T02:33:56.661Z",
+      "archivedAt": "2026-07-25T02:37:59.931Z",
       "pages": [
         {
           "time": "00:00",
@@ -4017,21 +4017,6 @@
                     {
                       "label": "微信小额",
                       "value": "0.855",
-                      "highlight": false
-                    }
-                  ]
-                },
-                {
-                  "name": "未分组",
-                  "items": [
-                    {
-                      "label": "直拉",
-                      "value": "0.91",
-                      "highlight": false
-                    },
-                    {
-                      "label": "火箭",
-                      "value": "0.935",
                       "highlight": false
                     }
                   ]
