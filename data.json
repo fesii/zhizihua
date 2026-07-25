@@ -166,21 +166,6 @@
                   "highlight": false
                 }
               ]
-            },
-            {
-              "name": "未分组",
-              "items": [
-                {
-                  "label": "直拉",
-                  "value": "0.91",
-                  "highlight": false
-                },
-                {
-                  "label": "火箭",
-                  "value": "0.935",
-                  "highlight": false
-                }
-              ]
             }
           ],
           "copyText": "小刀 00:00 价格模板\n"
