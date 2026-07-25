@@ -117,7 +117,7 @@ h1 {
 }
 
 .time-tabs button {
-  min-width: 148px;
+  min-width: 74px;
   height: 40px;
   border: 0;
   border-radius: 20px;
@@ -370,7 +370,7 @@ h1 {
   }
 
   .time-tabs button {
-    min-width: 138px;
+    min-width: 64px;
     height: 36px;
     font-size: 15px;
   }

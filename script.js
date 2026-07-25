@@ -59,11 +59,10 @@ function getBusinessDate() {
 
 function renderTimeTabs(pages, activeTime) {
   timeTabs.replaceChildren();
-  const date = getBusinessDate();
   pages.forEach((page) => {
     const button = document.createElement("button");
     button.type = "button";
-    button.textContent = [date, page.time].filter(Boolean).join(" ");
+    button.textContent = page.time;
     button.className = page.time === activeTime ? "active" : "";
     button.addEventListener("click", () => {
       selectedTime = page.time;
