@@ -171,6 +171,69 @@
           "copyText": "小刀 00:00 价格模板\n"
         }
       ]
+    },
+    {
+      "time": "11.10",
+      "updatedAt": "11.10",
+      "notice": "11.10 价格已更新",
+      "sections": [
+        {
+          "title": "小刀",
+          "subtitle": "网页入口",
+          "linkText": "https://el5.q8z6i1l9d6o8e.top/admin",
+          "accent": "blue",
+          "groups": [
+            {
+              "name": "钱包整百",
+              "items": [
+                {
+                  "label": "普通",
+                  "value": "0.905"
+                },
+                {
+                  "label": "加速",
+                  "value": "0.91"
+                },
+                {
+                  "label": "超速",
+                  "value": "0.915"
+                },
+                {
+                  "label": "高速",
+                  "value": "0.92"
+                },
+                {
+                  "label": "极速",
+                  "value": "0.925"
+                },
+                {
+                  "label": "秒拉",
+                  "value": "0.935",
+                  "highlight": true
+                }
+              ]
+            },
+            {
+              "name": "钱包特殊",
+              "items": [
+                {
+                  "label": "怪额",
+                  "value": "0.94"
+                },
+                {
+                  "label": "超怪",
+                  "value": "0.95"
+                },
+                {
+                  "label": "大额",
+                  "value": "0.94"
+                }
+              ]
+            }
+          ],
+          "copyText": "小刀 00:00 价格模板\n"
+        }
+      ]
     }
   ],
   "updatedAt": "2026-07-25 00:00"
