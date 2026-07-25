@@ -25,9 +25,13 @@ const groupTemplate = document.querySelector("#group-editor-template");
 const itemTemplate = document.querySelector("#item-editor-template");
 
 let appData = null;
+let currentData = null;
+let historyData = { records: [] };
+let editingHistoryDate = "";
 let selectedTime = "";
 let fileHandle = null;
 let githubFileSha = "";
+let historyFileSha = "";
 
 const GROUP_BY_LABEL = new Map([
   ["普通", "钱包整百"],
@@ -46,6 +50,12 @@ const GROUP_ORDER = ["钱包整百", "钱包特殊", "微信通道", "未分组"
 async function loadDefaultData() {
   const response = await fetch(`./data.json?v=${Date.now()}`, { cache: "no-store" });
   if (!response.ok) throw new Error("读取 data.json 失败");
+  return response.json();
+}
+
+async function loadDefaultHistory() {
+  const response = await fetch(`./history.json?v=${Date.now()}`, { cache: "no-store" });
+  if (!response.ok) return { records: [] };
   return response.json();
 }
 
@@ -227,15 +237,23 @@ function normalizeTime(value) {
   return String(value || "").replace(".", ":").padStart(5, "0");
 }
 
+function getDataBusinessDateFrom(data) {
+  const pages = (data && data.pages) || [];
+  const midnightPage = pages.find((page) => normalizeTime(page.time) === "00:00");
+  return extractDate(midnightPage && midnightPage.updatedAt) || extractDate(data && data.updatedAt) || new Date().toISOString().slice(0, 10);
+}
+
 function getBusinessDate() {
   if (businessDateInput.value) return businessDateInput.value;
-  const midnightPage = (appData.pages || []).find((page) => normalizeTime(page.time) === "00:00");
-  return extractDate(midnightPage && midnightPage.updatedAt) || extractDate(appData.updatedAt) || new Date().toISOString().slice(0, 10);
+  return getDataBusinessDate();
 }
 
 function getDataBusinessDate() {
-  const midnightPage = (appData.pages || []).find((page) => normalizeTime(page.time) === "00:00");
-  return extractDate(midnightPage && midnightPage.updatedAt) || extractDate(appData.updatedAt) || new Date().toISOString().slice(0, 10);
+  return getDataBusinessDateFrom(appData);
+}
+
+function getCurrentBusinessDate() {
+  return getDataBusinessDateFrom(currentData || appData);
 }
 
 function getMidnightPage() {
@@ -256,7 +274,71 @@ function applyBusinessDate(date) {
 }
 
 function renderBusinessDate() {
-  businessDateInput.value = getDataBusinessDate();
+  businessDateInput.value = editingHistoryDate || getDataBusinessDate();
+}
+
+function findHistoryRecord(date) {
+  return ((historyData && historyData.records) || []).find((entry) => entry.date === date);
+}
+
+function buildEditorDataFromHistoryRecord(record) {
+  return {
+    siteTitle: record.siteTitle || (currentData && currentData.siteTitle) || "",
+    activeTime: record.activeTime || ((record.pages && record.pages[0] && record.pages[0].time) || ""),
+    pages: cloneData(record.pages || [])
+  };
+}
+
+function buildHistoryRecord(date) {
+  return {
+    date,
+    siteTitle: appData.siteTitle || "",
+    activeTime: appData.activeTime || "",
+    archivedAt: new Date().toISOString(),
+    pages: cloneData(appData.pages || [])
+  };
+}
+
+function upsertHistoryRecord(record) {
+  historyData = historyData || { records: [] };
+  historyData.records = (historyData.records || []).filter((entry) => entry.date !== record.date);
+  historyData.records.push(record);
+  historyData.records.sort((a, b) => a.date.localeCompare(b.date));
+}
+
+function isHistoryEditDate(date) {
+  return Boolean(date) && date < getCurrentBusinessDate();
+}
+
+function switchEditingDate(date) {
+  const selectedDate = date || getCurrentBusinessDate();
+  const shouldEditHistory = isHistoryEditDate(selectedDate);
+
+  if (shouldEditHistory) {
+    const record = findHistoryRecord(selectedDate);
+    editingHistoryDate = selectedDate;
+    if (record) {
+      appData = buildEditorDataFromHistoryRecord(record);
+      selectedTime = appData.activeTime || ((appData.pages && appData.pages[0] && appData.pages[0].time) || "");
+      render();
+      setStatus(`正在修改 ${selectedDate} 的历史价格。保存时只会更新 history.json，不会影响公告页当前价格。`);
+      return;
+    }
+
+    appData = cloneData(currentData || appData);
+    applyBusinessDate(selectedDate);
+    selectedTime = appData.activeTime || ((appData.pages && appData.pages[0] && appData.pages[0].time) || "");
+    render();
+    setStatus(`${selectedDate} 暂无历史记录，已用最新价格创建一份历史草稿。保存时只会写入 history.json。`);
+    return;
+  }
+
+  editingHistoryDate = "";
+  appData = cloneData(currentData || appData);
+  applyBusinessDate(selectedDate);
+  selectedTime = appData.activeTime || ((appData.pages && appData.pages[0] && appData.pages[0].time) || "");
+  render();
+  setStatus(`正在修改 ${selectedDate} 的最新公告价格。保存后客户网页会显示这一天。`);
 }
 
 async function archiveCurrentPricesToGithub() {
@@ -264,25 +346,49 @@ async function archiveCurrentPricesToGithub() {
   const historyFile = await loadGithubContentFile(historyPath);
   const history = historyFile ? JSON.parse(base64ToUtf8(historyFile.content)) : { records: [] };
   const date = getBusinessDate();
-  const record = {
-    date,
-    siteTitle: appData.siteTitle || "",
-    activeTime: appData.activeTime || "",
-    archivedAt: new Date().toISOString(),
-    pages: cloneData(appData.pages || [])
-  };
+  const record = buildHistoryRecord(date);
 
   history.records = (history.records || []).filter((entry) => entry.date !== date);
   history.records.push(record);
   history.records.sort((a, b) => a.date.localeCompare(b.date));
 
-  await saveGithubContentFile(
+  const result = await saveGithubContentFile(
     historyPath,
     JSON.stringify(history, null, 2),
     `Archive prices ${date}`,
     (historyFile && historyFile.sha) || ""
   );
 
+  historyData = history;
+  historyFileSha = result.content.sha;
+  return date;
+}
+
+async function loadHistoryFromGithub() {
+  const historyPath = getHistoryPath();
+  const historyFile = await loadGithubContentFile(historyPath);
+  historyFileSha = (historyFile && historyFile.sha) || "";
+  historyData = historyFile ? JSON.parse(base64ToUtf8(historyFile.content)) : { records: [] };
+  return historyData;
+}
+
+async function saveHistoryEditToGithub(date) {
+  const historyPath = getHistoryPath();
+  if (!historyFileSha) {
+    await loadHistoryFromGithub();
+  }
+
+  const record = buildHistoryRecord(date);
+  upsertHistoryRecord(record);
+
+  const result = await saveGithubContentFile(
+    historyPath,
+    JSON.stringify(historyData, null, 2),
+    `Update history prices ${date}`,
+    historyFileSha
+  );
+
+  historyFileSha = result.content.sha;
   return date;
 }
 
@@ -485,11 +591,10 @@ function bindCheckbox(element, object, field) {
 
 function renderTimeTabs() {
   timeTabs.replaceChildren();
-  const date = businessDateInput.value || getDataBusinessDate();
   appData.pages.forEach((page) => {
     const button = document.createElement("button");
     button.type = "button";
-    button.textContent = `${date} ${page.time}`;
+    button.textContent = page.time;
     button.className = page.time === selectedTime ? "active" : "";
     button.addEventListener("click", () => {
       selectedTime = page.time;
@@ -622,7 +727,20 @@ function downloadData() {
 async function saveData() {
   appData.siteTitle = siteTitleInput.value;
   appData.activeTime = activeTimeInput.value || selectedTime;
-  applyBusinessDate(businessDateInput.value);
+  const selectedDate = businessDateInput.value || getCurrentBusinessDate();
+  applyBusinessDate(selectedDate);
+  if (editingHistoryDate || isHistoryEditDate(selectedDate)) {
+    upsertHistoryRecord(buildHistoryRecord(selectedDate));
+    const blob = new Blob([JSON.stringify(historyData, null, 2)], { type: "application/json;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "history.json";
+    link.click();
+    URL.revokeObjectURL(url);
+    setStatus(`已下载 ${selectedDate} 的 history.json。公告页当前 data.json 没有被改变。`);
+    return;
+  }
   const json = JSON.stringify(appData, null, 2);
 
   if (fileHandle && fileHandle.createWritable) {
@@ -640,17 +758,27 @@ async function saveData() {
 async function loadFromGithub() {
   const config = getGithubConfig();
   const result = await githubRequest(getGithubApiUrl(config));
-  appData = JSON.parse(base64ToUtf8(result.content));
+  currentData = JSON.parse(base64ToUtf8(result.content));
+  appData = cloneData(currentData);
   githubFileSha = result.sha;
+  editingHistoryDate = "";
+  await loadHistoryFromGithub();
   selectedTime = appData.activeTime || ((appData.pages && appData.pages[0] && appData.pages[0].time) || "");
   render();
-  setStatus("已读取 GitHub 上的最新 data.json。");
+  setStatus("已读取 GitHub 上的最新 data.json 和 history.json。默认显示最新一天价格。");
 }
 
 async function saveToGithub() {
   appData.siteTitle = siteTitleInput.value;
   appData.activeTime = activeTimeInput.value || selectedTime;
-  applyBusinessDate(businessDateInput.value);
+  const selectedDate = businessDateInput.value || getCurrentBusinessDate();
+  applyBusinessDate(selectedDate);
+
+  if (editingHistoryDate || isHistoryEditDate(selectedDate)) {
+    const savedDate = await saveHistoryEditToGithub(selectedDate);
+    setStatus(`已保存 ${savedDate} 的历史价格。公告页面当前价格没有被改变。`);
+    return;
+  }
 
   const config = getGithubConfig();
   if (!githubFileSha) {
@@ -666,6 +794,8 @@ async function saveToGithub() {
   );
 
   githubFileSha = result.content.sha;
+  currentData = cloneData(appData);
+  editingHistoryDate = "";
   const archivedDate = await archiveCurrentPricesToGithub();
   setStatus(`已保存到 GitHub，并归档到 ${archivedDate}。客户网页等待几十秒后刷新即可看到新内容。`);
 }
@@ -679,7 +809,9 @@ async function openDataFile() {
     types: [{ description: "JSON 文件", accept: { "application/json": [".json"] } }]
   });
   const file = await handle.getFile();
-  appData = JSON.parse(await file.text());
+  currentData = JSON.parse(await file.text());
+  appData = cloneData(currentData);
+  editingHistoryDate = "";
   fileHandle = handle;
   selectedTime = appData.activeTime || ((appData.pages && appData.pages[0] && appData.pages[0].time) || "");
   render();
@@ -700,10 +832,7 @@ siteTitleInput.addEventListener("input", () => {
 });
 
 businessDateInput.addEventListener("change", () => {
-  applyBusinessDate(businessDateInput.value);
-  renderTimeTabs();
-  renderEditor();
-  setStatus(`修改日期已设为 ${businessDateInput.value}，保存到 GitHub 后会按这个日期归档。`);
+  switchEditingDate(businessDateInput.value);
 });
 
 activeTimeInput.addEventListener("change", () => {
@@ -766,12 +895,15 @@ clearImportButton.addEventListener("click", () => {
   pastePricesInput.value = "";
 });
 
-loadDefaultData()
-  .then((data) => {
-    appData = data;
+Promise.all([loadDefaultData(), loadDefaultHistory()])
+  .then(([data, history]) => {
+    currentData = data;
+    appData = cloneData(data);
+    historyData = history || { records: [] };
+    editingHistoryDate = "";
     selectedTime = data.activeTime || ((data.pages && data.pages[0] && data.pages[0].time) || "");
     render();
-    setStatus("已读取 data.json。建议先点“打开 data.json”选择文件，之后可以直接保存并同步。");
+    setStatus("已读取最新 data.json。选择更早日期时会修改历史价格，不会影响公告页当前价格。");
   })
   .catch((error) => {
     setStatus(error.message);
