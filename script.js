@@ -57,6 +57,22 @@ function getBusinessDate() {
   return extractDate(midnightPage && midnightPage.updatedAt) || extractDate(appData.updatedAt);
 }
 
+function formatDateForDisplay(date) {
+  return String(date || "").replace(/-/g, "/");
+}
+
+function getPageDisplayDateTime(page) {
+  const date = formatDateForDisplay(getBusinessDate() || extractDate(page.updatedAt));
+  return [date, page.time].filter(Boolean).join(" ");
+}
+
+function getNoticeText(page) {
+  const notice = String(page.notice || "价格已更新")
+    .replace(/^\s*(20\d{2}[-/.年]\d{1,2}[-/.月]\d{1,2}(日)?\s*)?(\d{1,2}[:.]\d{1,2})?\s*/, "")
+    .trim();
+  return `${getPageDisplayDateTime(page)} ${notice || "价格已更新"}`;
+}
+
 function renderTimeTabs(pages, activeTime) {
   timeTabs.replaceChildren();
   pages.forEach((page) => {
@@ -294,8 +310,8 @@ function renderPage() {
   }
 
   renderTimeTabs(appData.pages || [], page.time);
-  setText("#updated-at", page.updatedAt || page.time);
-  setText("#notice-text", page.notice || "");
+  setText("#updated-at", getPageDisplayDateTime(page));
+  setText("#notice-text", getNoticeText(page));
   renderSections(page.sections || []);
 }
 
